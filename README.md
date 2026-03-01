@@ -30,8 +30,8 @@ Businesses require accurate sales forecasts to:
 ---
 
 ## 📊 Model Performance
-- MAE: ~11024
-- R² Score: ~0.65
+- MAE: 11,217
+- R²: 0.647
 
 ---
 
