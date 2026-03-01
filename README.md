@@ -1,8 +1,3 @@
-Perfect 👌
-Here is your professional, internship-ready README.md — clean, strong, and recruiter-friendly.
-
-You can copy-paste this into your GitHub README.
-
 🚀 AI-Powered Sales Forecasting & Business Analytics
 📌 Project Overview
 
