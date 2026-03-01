@@ -5,7 +5,7 @@ import numpy as np
 
 st.title("AI-Powered Sales Forecasting Dashboard")
 
-model = joblib.load("model/sales_forecast_model.pkl")
+model = joblib.load("sales_forecast_model.pkl")
 
 st.subheader("Enter Feature Values")
 
@@ -27,4 +27,5 @@ if st.button("Predict Sales"):
     }])
 
     prediction = model.predict(input_data)[0]
+
     st.success(f"Predicted Sales: ₹ {round(prediction,2)}")
