@@ -42,16 +42,38 @@ monthly = monthly.dropna()
 monthly = monthly.dropna()
 
 # ---------------------------
-# 4. Model Preparation
+# 4. Advanced Feature Engineering Upgrade
 # ---------------------------
-X = monthly[[
-    "Year",
-    "Month",
-    "Lag_1",
-    "Lag_2",
-    "Rolling_Mean_3",
-    "Rolling_Mean_6"
-]]
+
+# Additional Lags
+monthly["Lag_3"] = monthly["Sales"].shift(3)
+
+# 12-Month Rolling Mean (captures yearly seasonality)
+monthly["Rolling_Mean_12"] = monthly["Sales"].rolling(12).mean()
+
+# Year trend scaling
+monthly["Year_Index"] = monthly["Year"] - monthly["Year"].min()
+
+# Drop NaN
+monthly = monthly.dropna()
+
+# ---------------------------
+# 5. Model Preparation
+# ---------------------------
+
+X = monthly[
+    [
+        "Year_Index",
+        "Month",
+        "Lag_1",
+        "Lag_2",
+        "Lag_3",
+        "Rolling_Mean_3",
+        "Rolling_Mean_6",
+        "Rolling_Mean_12"
+    ]
+]
+
 y = monthly["Sales"]
 
 split = int(len(X) * 0.8)
@@ -59,23 +81,26 @@ X_train, X_test = X[:split], X[split:]
 y_train, y_test = y[:split], y[split:]
 
 # ---------------------------
-# 5. Train Model
+# 6. Stronger Random Forest
 # ---------------------------
+
 model = RandomForestRegressor(
-    n_estimators=500,
-    max_depth=10,
+    n_estimators=1000,
+    max_depth=None,
+    min_samples_split=2,
+    min_samples_leaf=1,
     random_state=42
 )
 
 model.fit(X_train, y_train)
 predictions = model.predict(X_test)
 
-# ---------------------------
-# 6. Evaluation
-# ---------------------------
-print("\nModel Performance:")
+print("\nImproved Model Performance:")
 print("MAE:", round(mean_absolute_error(y_test, predictions), 2))
 print("R2 Score:", round(r2_score(y_test, predictions), 3))
+
+joblib.dump(model, "sales_forecast_model.pkl")
+print("Improved model saved.")
 
 # ---------------------------
 # 7. Save Model
@@ -177,3 +202,4 @@ model = grid.best_estimator_
 
 print("Best Parameters:", grid.best_params_)
 monthly.to_csv("D:/Projects/Sales_Forecasting_Model/monthly_sales_output.csv", index=False)
+
