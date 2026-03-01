@@ -61,25 +61,23 @@ monthly = monthly.dropna()
 # 5. Model Preparation
 # ---------------------------
 
+monthly["Lag_1"] = monthly["Sales"].shift(1)
+monthly["Lag_2"] = monthly["Sales"].shift(2)
+monthly["Lag_3"] = monthly["Sales"].shift(3)
+
+monthly = monthly.dropna()
+
 X = monthly[
     [
         "Year_Index",
         "Month",
         "Lag_1",
         "Lag_2",
-        "Lag_3",
-        "Rolling_Mean_3",
-        "Rolling_Mean_6",
-        "Rolling_Mean_12"
+        "Lag_3"
     ]
 ]
 
 y = monthly["Sales"]
-
-split = int(len(X) * 0.8)
-X_train, X_test = X[:split], X[split:]
-y_train, y_test = y[:split], y[split:]
-
 # ---------------------------
 # 6. Stronger Random Forest
 # ---------------------------
@@ -202,4 +200,5 @@ model = grid.best_estimator_
 
 print("Best Parameters:", grid.best_params_)
 monthly.to_csv("D:/Projects/Sales_Forecasting_Model/monthly_sales_output.csv", index=False)
+
 
